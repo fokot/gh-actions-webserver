@@ -5,4 +5,3 @@ WORKDIR /app
 COPY /target/universal/stage /app
 
 ENTRYPOINT ["bin/gh-actions-webserver"]
-
