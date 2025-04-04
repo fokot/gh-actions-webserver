@@ -18,6 +18,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Install sbt
+        run: |
+          curl -L https://github.com/sbt/sbt/releases/download/v1.10.11/sbt-1.10.11.tgz | tar xz
+          echo "$PWD/sbt/bin" >> $GITHUB_PATH
+
       - name: Compile & test
         run: sbt stage
 
