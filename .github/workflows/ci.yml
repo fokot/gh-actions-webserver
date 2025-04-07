@@ -44,7 +44,7 @@ jobs:
       - name: Docker tag
         run: |
           TIMESTAMP=$(date -u +'%Y%m%d%H%M%S')
-          DOCKER_TAG="$TIMESTAMP-${{ github.sha }}"
+          export DOCKER_TAG="$TIMESTAMP-${{ github.sha }}"
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile-packages --target frontend --tag kodiak-helped-fawn.ngrok-free.app/pigbot-frontend:fero-webserver:$DOCKER_TAG
