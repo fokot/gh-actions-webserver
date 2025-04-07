@@ -28,8 +28,7 @@ jobs:
 
   docker-image:
     needs: build
-    runs-on:
-      - self-hosted
+    runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     container:
       image: gcr.io/kaniko-project/executor:v1.23.2-debug
