@@ -42,12 +42,13 @@ jobs:
           password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 
       - name: Docker tag
+        id: tag
         run: |
           TIMESTAMP=$(date -u +'%Y%m%d%H%M%S')
-          export DOCKER_TAG="$TIMESTAMP-${{ github.sha }}"
+          echo "DOCKER_TAG=$TIMESTAMP-${{ github.sha }}" >> "$GITHUB_OUTPUT"
 
       - name: Build the Docker image
-        run: docker build . --file Dockerfile-packages --target frontend --tag kodiak-helped-fawn.ngrok-free.app/pigbot-frontend:fero-webserver:$DOCKER_TAG
+        run: docker build . --file Dockerfile-packages --target frontend --tag kodiak-helped-fawn.ngrok-free.app/pigbot-frontend:fero-webserver:${{ steps.tag.DOCKER_TAG }}
 
       - name: Push the Docker image
-        run: docker push kodiak-helped-fawn.ngrok-free.app/fero-webserver:$DOCKER_TAG
+        run: docker push kodiak-helped-fawn.ngrok-free.app/fero-webserver:${{ steps.tag.DOCKER_TAG }}
