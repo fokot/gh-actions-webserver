@@ -26,3 +26,20 @@ jobs:
       - name: Compile & test
         run: sbt stage
 
+  docker-image:
+    needs: build
+    runs-on:
+      - self-hosted
+    if: ${{ github.ref == 'refs/heads/main' }}
+    container:
+      image: gcr.io/kaniko-project/executor:v1.23.2-debug
+      options: --entrypoint=""
+      env:
+        DOCKER_AUTH_CONFIG: ${{ secrets.DOCKER_AUTH_CONFIG }}
+    steps:
+      - name: Build and push Docker image
+        run: |
+          echo "$DOCKER_AUTH_CONFIG" > /kaniko/.docker/config.json
+          TIMESTAMP=$(date -u +'%Y%m%d%H%M%S')
+          DOCKER_TAG="$TIMESTAMP-${{ github.sha }}"
+          /kaniko/executor --context . --dockerfile Dockerfile --destination kodiak-helped-fawn.ngrok-free.app/fero-webserver:$DOCKER_TAG
