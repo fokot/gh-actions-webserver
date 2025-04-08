@@ -15,8 +15,12 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       munit % Test,
       "com.fokot" %% "gh-actions-library" % "0.2.0-SNAPSHOT",
-      "dev.zio" %% "zio-http" % "3.2.0"
-    )
+      "dev.zio" %% "zio-http" % "3.2.0",
+      "org.scalikejdbc" %% "scalikejdbc" % "4.3.2",
+      "com.zaxxer" % "HikariCP" % "6.3.0",
+      "org.postgresql" % "postgresql" % "42.7.5",
+    ),
+    run / fork := true,
   )
 
 enablePlugins(JavaAppPackaging)
