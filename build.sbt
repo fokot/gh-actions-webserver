@@ -6,8 +6,15 @@ ThisBuild / scalaVersion     := "2.13.16"
 ThisBuild / version          := "0.2.0-SNAPSHOT"
 ThisBuild / organization     := "com.fokot"
 ThisBuild / organizationName := "webserver"
-ThisBuild / resolvers += "Sonatype Nexus Repository Manager" at "https://kodiak-helped-fawn.ngrok-free.app/repository/maven-public/"
-ThisBuild / resolvers += "Sonatype Nexus Repository Manager snapshots" at "https://kodiak-helped-fawn.ngrok-free.app/repository/maven-snapshots/"
+ThisBuild / resolvers += "Sonatype Nexus Repository Manager" at "https://repository.cloudfarms.online/repository/maven-workshop/"
+ThisBuild / resolvers += "Sonatype Nexus Repository Manager snapshots" at "https://repository.cloudfarms.online/repository/maven-workshop/"
+
+val credentialsViaEnvVariables = for {
+  username <- sys.env.get("MAVEN_WRITE_USERNAME")
+  password <- sys.env.get("MAVEN_WRITE_PASSWORD")
+} yield Credentials("Sonatype Nexus Repository Manager", "repository.cloudfarms.online", username, password)
+
+ThisBuild / credentials += credentialsViaEnvVariables.getOrElse(Credentials(Path.userHome / ".sbt" / ".credentials"))
 
 lazy val root = (project in file("."))
   .settings(
