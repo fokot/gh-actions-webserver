@@ -19,6 +19,9 @@ lazy val root = (project in file("."))
       "org.scalikejdbc" %% "scalikejdbc" % "4.3.2",
       "com.zaxxer" % "HikariCP" % "6.3.0",
       "org.postgresql" % "postgresql" % "42.7.5",
+      "dev.zio" %% "zio-test" % "2.1.17" % Test,
+      "dev.zio" %% "zio-test-sbt" % "2.1.17" % Test,
+      "com.github.sideeffffect" %% "zio-testcontainers" % "0.6.0" % Test
     ),
     run / fork := true,
   )

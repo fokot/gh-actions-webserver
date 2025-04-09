@@ -21,7 +21,7 @@ object Hello extends ZIOAppDefault {
       (cause: Cause[Throwable]) => Response.text(cause.prettyPrint).status(Status.InternalServerError)
     )
 
-  private val connectionPool: ZLayer[Any, Nothing, DataSourceConnectionPool] = ZLayer {
+  private[example] val connectionPool: ZLayer[Any, Nothing, DataSourceConnectionPool] = ZLayer {
     ZIO.attempt {
       val c = new HikariConfig()
       c.setJdbcUrl("jdbc:postgresql://localhost:5433/postgres")
@@ -31,10 +31,10 @@ object Hello extends ZIOAppDefault {
     }
   }.orDie
 
-  private def tx[A, E <: WithExtractor, C[_]](f: SQLToResult[A, E, C])(implicit hasExtractor: f.ThisSQL =:= f.SQLWithExtractor): ZIO[DataSourceConnectionPool, Throwable, C[A]] =
+  private def readOnly[A, E <: WithExtractor, C[_]](f: SQLToResult[A, E, C])(implicit hasExtractor: f.ThisSQL =:= f.SQLWithExtractor): ZIO[DataSourceConnectionPool, Throwable, C[A]] =
     ZIO.service[DataSourceConnectionPool].flatMap(cp =>
       ZIO.attemptBlocking {
-        DB(cp.borrow()) localTx { implicit session =>
+        DB(cp.borrow()) readOnly { implicit session =>
           f.apply()
         }
       }
@@ -49,8 +49,8 @@ object Hello extends ZIOAppDefault {
       }
     )
 
-  private val getValue = tx(sql"select value from saved_value order by id desc limit 1".map { rs => rs.string("value") }.headOption)
-  private def saveValue(value: String) = tx(sql"insert into saved_value (value) values (${value})".executeUpdate)
+  private[example] val getValue = readOnly(sql"select value from saved_value order by id desc limit 1".map { rs => rs.string("value") }.headOption)
+  private[example] def saveValue(value: String) = tx(sql"insert into saved_value (value) values (${value})".executeUpdate)
 
   override def run: ZIO[Any with ZIOAppArgs with Scope, Any, Any] =
     Server.serve(routes).provide(Server.default, connectionPool)
