@@ -55,7 +55,7 @@ jobs:
       - name: Login to docker registry
         uses: docker/login-action@v3
         with:
-          registry: kodiak-helped-fawn.ngrok-free.app
+          registry: repositoryworkshop.cloudfarms.online
           username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
           password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 
@@ -66,7 +66,7 @@ jobs:
           echo "DOCKER_TAG=$TIMESTAMP-${{ github.sha }}" >> "$GITHUB_OUTPUT"
 
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag kodiak-helped-fawn.ngrok-free.app/fero-webserver:${{ steps.tag.outputs.DOCKER_TAG }}
+        run: docker build . --file Dockerfile --tag repositoryworkshop.cloudfarms.online/fero-webserver:${{ steps.tag.outputs.DOCKER_TAG }}
 
       - name: Push the Docker image
-        run: docker push kodiak-helped-fawn.ngrok-free.app/fero-webserver:${{ steps.tag.outputs.DOCKER_TAG }}
+        run: docker push repositoryworkshop.cloudfarms.online/fero-webserver:${{ steps.tag.outputs.DOCKER_TAG }}
