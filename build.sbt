@@ -21,7 +21,7 @@ lazy val root = (project in file("."))
     name := "gh-actions-webserver",
     libraryDependencies ++= Seq(
       munit % Test,
-      "com.fokot" %% "gh-actions-library" % "0.2.0-SNAPSHOT",
+      "com.fokot" %% "gh-actions-library" % "0.3.0-SNAPSHOT",
       "dev.zio" %% "zio-http" % "3.2.0",
       "org.scalikejdbc" %% "scalikejdbc" % "4.3.2",
       "com.zaxxer" % "HikariCP" % "6.3.0",
